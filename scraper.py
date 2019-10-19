@@ -31,14 +31,14 @@ def scrape_word(text, initial=False):
 
     print(interest_flattened)
 
-    # if initial:
-    #     with open('trends.csv','w') as result_file:
-    #         wr = csv.writer(result_file, dialect='excel')
-    #         wr.writerow(interest_flattened)
-    # else:
-    #     with open('trends.csv','a') as result_file:
-    #         wr = csv.writer(result_file, dialect='excel')
-    #         wr.writerow(interest_flattened)
+    if initial:
+        with open('trends.csv','w') as result_file:
+            wr = csv.writer(result_file, dialect='excel')
+            wr.writerow(interest_flattened)
+    else:
+        with open('trends.csv','a') as result_file:
+            wr = csv.writer(result_file, dialect='excel')
+            wr.writerow(interest_flattened)
 
 def transpose(file):
     file_df=pd.read_csv(file)
