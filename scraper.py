@@ -47,5 +47,5 @@ def transpose(file):
 
 
 if __name__ == "__main__":
-    scrape_file('research_Paper_Search_Terms.txt')
-    # transpose('trends.csv')
+    # scrape_file('research_Paper_Search_Terms.txt')
+    transpose('trends.csv')

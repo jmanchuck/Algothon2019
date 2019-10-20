@@ -14,10 +14,10 @@ from keras.layers import LSTM
 
 def clean():
 
-    dataset = read_csv('meta_data_2.csv', index_col=0)
+    dataset = read_csv('combined.csv', index_col=0)
 
     # manually specify column names
-    dataset.columns = ['debt', 'market', 'price']
+    dataset.columns = ['debt', 'dividend', 'earnings', 'inflation', 'markets', 'bonds', 'FTSE', 'financial markets', 'investment', 'derivatives', 'economy', 'stocks', 'economics', 'leverage', 'risk', 'short selling', 'credit', 'price']
     dataset.index.name = 'week'
 
     # summarize first 5 rows
@@ -39,7 +39,7 @@ def plot():
         pyplot.plot(values[:, group])
         pyplot.title(dataset.columns[group], y=0.5, loc='right')
         i += 1
-    pyplot.show()
+    pyplot.savefig("plots.png")
 
 
 # convert series to supervised learning
@@ -74,7 +74,7 @@ values = dataset.values
 
 # integer encode direction
 encoder = LabelEncoder()
-values[:, 2] = encoder.fit_transform(values[:, 2])
+values[:, 17] = encoder.fit_transform(values[:, 17])
 # ensure all data is float
 values = values.astype('float32')
 # normalize features
@@ -83,14 +83,14 @@ scaled = scaler.fit_transform(values)
 # frame as supervised learning
 reframed = series_to_supervised(scaled, 1, 1)
 n_weeks = 1
-n_features = 2
+n_features = 18
 # drop columns we don't want to predict
-reframed.drop(reframed.columns[[4,5]], axis=1, inplace=True)
-print(reframed)
+reframed.drop(reframed.columns[[x for x in range(19, 36)]], axis=1, inplace=True)
 
 # split into train and test sets
 values = reframed.values
-n_train_hours = 50
+print(values)
+n_train_hours = 130
 train = values[:n_train_hours, :]
 test = values[n_train_hours:, :]
 # split into input and outputs
@@ -106,7 +106,7 @@ model.add(LSTM(100, input_shape=(train_X.shape[1], train_X.shape[2])))
 model.add(Dense(1))
 model.compile(loss='mae', optimizer='adam')
 # fit network
-history = model.fit(train_X, train_y, epochs=50, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
+history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
 # plot history
 pyplot.plot(history.history['loss'], label='train')
 pyplot.plot(history.history['val_loss'], label='test')
